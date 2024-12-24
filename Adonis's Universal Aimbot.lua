@@ -63,7 +63,7 @@ local ignoreSelf = true
 
 local Window = Rayfield:CreateWindow({
     Name = "▶ Adonisdeo's Universal Aimbot Hub ◀",
-    LoadingTitle = "Loading fucking bitch",
+    LoadingTitle = "Loading fucking nigger",
     LoadingSubtitle = "by adonisdeo on discord",
     ConfigurationSaving = {
         Enabled = true,
