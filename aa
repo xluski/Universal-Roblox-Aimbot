@@ -1,0 +1,82 @@
+-- Load Rayfield UI Library
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- Create the main UI window
+local Window = Rayfield:CreateWindow({
+    Name = "PanHub",
+    LoadingTitle = "PanHub Scripts",
+    LoadingSubtitle = "Preventing AFK & Loading Scripts",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "PanHubConfigs",
+        FileName = "ScriptSettings"
+    },
+    Discord = {
+        Enabled = true,
+        Invite = "JhNvSkcmZm", -- Your Discord invite code
+        RememberJoins = true
+    },
+    KeySystem = false, -- Disable key system for simplicity
+})
+
+-- AFK Prevention Task
+task.spawn(function()
+    local VirtualInputManager = game:GetService("VirtualInputManager")
+    while wait(60) do
+        VirtualInputManager:SendKeyEvent(true, "F13", false, game) -- Simulate F13 press
+        wait(0.1)
+        VirtualInputManager:SendKeyEvent(false, "F13", false, game) -- Release F13
+        print("Preventing AFK with F13 key press.")
+    end
+end)
+
+-- Game-specific script details
+local scriptHub = {
+    [122220249529691] = { name = "Anime Lootify", url = "https://raw.githubusercontent.com/Cheemos/AIHUBRBLX/refs/heads/main/Scripts/Anime%20Lootify" },
+    [16498193900] = { name = "Lootify", url = "https://raw.githubusercontent.com/Cheemos/PanHub/refs/heads/main/Scripts/Lootify" },
+    [18629053284] = { name = "Survival Odyssey", url = "https://raw.githubusercontent.com/Cheemos/PanHub/refs/heads/main/Scripts/SurvivalOdyssey" },
+    [17486343676] = { name = "Too Many Weapons", url = "https://raw.githubusercontent.com/Cheemos/PanHub/refs/heads/main/Scripts/TooManyWeapons" },
+    [116434053579571] = { name = "Mining GO!", url = "https://raw.githubusercontent.com/Cheemos/PanHub/refs/heads/main/Scripts/Mining%20GO!" },
+}
+
+local gameId = game.PlaceId
+
+-- Scripts Tab
+local ScriptsTab = Window:CreateTab("Scripts", 4483362458) -- Icon from Roblox catalog
+
+-- Display available scripts
+if scriptHub[gameId] then
+    ScriptsTab:CreateSection("Available Script")
+    ScriptsTab:CreateButton({
+        Name = "Load: " .. scriptHub[gameId].name,
+        Callback = function()
+            local success, script = pcall(game.HttpGet, game, scriptHub[gameId].url)
+            if success then
+                loadstring(script)()
+                Rayfield:Notify({
+                    Title = "Success",
+                    Content = "Script for " .. scriptHub[gameId].name .. " loaded successfully!",
+                    Duration = 5,
+                    Image = 4483362458, -- Notification icon
+                    Actions = { Ignore = { Name = "OK" } }
+                })
+            else
+                warn("Failed to load script: " .. tostring(script))
+            end
+        end,
+    })
+else
+    ScriptsTab:CreateSection("No Script Available")
+    for id, data in pairs(scriptHub) do
+        ScriptsTab:CreateButton({
+            Name = "Load: " .. data.name,
+            Callback = function()
+                local success, script = pcall(game.HttpGet, game, data.url)
+                if success then
+                    loadstring(script)()
+                    Rayfield:Notify({
+                        Title = "Success",
+                        Content = "Script for " .. data.name .. " loaded successfully!",
+                        Duration = 5,
+                        Image = 4483362458,
+                        Actions = { Ignore = { Name = "OK" }
